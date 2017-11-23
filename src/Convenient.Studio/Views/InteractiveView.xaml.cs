@@ -19,6 +19,7 @@ namespace Convenient.Studio.Views
             Input.Vm = Vm;
             _consoleWriter = new DocumentTextWriter(Console.Document, 0);
             ConsoleOut.Writer.Add(_consoleWriter, Dispatcher);
+            Input.Focus();
         }
 
         ~InteractiveView()
@@ -32,7 +33,7 @@ namespace Convenient.Studio.Views
             {
                 var statement = Input.GetSelectedOrAllText()?.Trim();
                 await Vm.Execute(statement);
-                Focus();
+                Input.Focus();
             }
         }
 

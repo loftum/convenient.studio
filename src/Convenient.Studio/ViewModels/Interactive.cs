@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Convenient.CSharp;
 using Convenient.CSharp.Completion;
 using Convenient.Studio.Controls;
@@ -24,6 +25,7 @@ namespace Convenient.Studio.ViewModels
                     "Newtonsoft.Json");
         }
 
+        private CancellationTokenSource _cancellationTokenSource;
         private CSharpEvaluator _evaluator;
         private InteractiveContext _context;
         private string _output;
@@ -61,11 +63,22 @@ namespace Convenient.Studio.ViewModels
             }
         }
 
+        public ICommand Cancel { get; }
+
 
         public Interactive()
         {
             Reset();
+            Cancel = new DelegateCommand(DoCancel);
             InputEnabled = true;
+        }
+
+        private void DoCancel()
+        {
+            if (IsExecuting)
+            {
+                _cancellationTokenSource.Cancel();
+            }
         }
 
         public void Reset()
@@ -82,12 +95,13 @@ namespace Convenient.Studio.ViewModels
 
         public async Task Execute(string statement)
         {
-            var source = new CancellationTokenSource();
+            IsExecuting = true;
+            _cancellationTokenSource = new CancellationTokenSource();
             try
             {
-                IsExecuting = true;
-                _context.CancellationToken = source.Token;
-                var result = await Task.Run(() => _evaluator.EvaluateAsync(statement, source.Token), source.Token);
+                
+                _context.CancellationToken = _cancellationTokenSource.Token;
+                var result = await Task.Run(() => _evaluator.EvaluateAsync(statement, _cancellationTokenSource.Token), _cancellationTokenSource.Token);
                 Output = result.ToResultString();
             }
             catch (Exception e)
@@ -98,7 +112,7 @@ namespace Convenient.Studio.ViewModels
             finally
             {
                 IsExecuting = false;
-                source.Dispose();
+                _cancellationTokenSource.Dispose();
             }
         }
     }

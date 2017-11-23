@@ -162,6 +162,7 @@
     <Compile Include="Controls\IInteractiveVm.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\CsharpResultExtensions.cs" />
+    <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\Interactive.cs" />
     <Compile Include="ViewModels\InteractiveContext.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
