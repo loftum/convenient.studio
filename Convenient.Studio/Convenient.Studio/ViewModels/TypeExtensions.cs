@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text;
 using Convenient.Studio.Scripting.Commandline;
 
 namespace Convenient.Studio.ViewModels;
@@ -8,13 +10,17 @@ public static class TypeExtensions
     {
         [typeof(byte)] = "byte",
         [typeof(short)] = "short",
+        [typeof(ushort)] = "ushort",
         [typeof(int)] = "int",
+        [typeof(uint)] = "uint",
         [typeof(long)] = "long",
+        [typeof(ulong)] = "ulong",
         [typeof(float)] = "float",
         [typeof(double)] = "double",
         [typeof(decimal)] = "decimal",
         [typeof(bool)] = "bool",
-        [typeof(string)] = "string"
+        [typeof(string)] = "string",
+        [typeof(void)] = "void"
     };
     
     public static string GetFriendlyName(this Type type)
@@ -36,6 +42,32 @@ public static class TypeExtensions
         }
 
         return type.Name;
+    }
+
+    public static string ToFriendlyString(this PropertyInfo property)
+    {
+        var builder = new StringBuilder($"{property.PropertyType.GetFriendlyName()} ");
+        if (property.DeclaringType != null)
+        {
+            builder.Append($"{property.DeclaringType.GetFriendlyName()}.");
+        }
+
+        builder.Append(property.Name);
+        return builder.ToString();
+    }
+    
+    public static string ToFriendlyString(this MethodInfo method)
+    {
+        var builder = new StringBuilder($"{method.ReturnType.GetFriendlyName()} ");
+        if (method.DeclaringType != null)
+        {
+            builder.Append($"{method.DeclaringType.GetFriendlyName()}.");
+        }
+
+        builder.Append($"{method.Name}(")
+            .Append(string.Join(", ", method.GetParameters().Select(p => $"{p.ParameterType.GetFriendlyName()} {p.Name}")))
+            .Append(")");
+        return builder.ToString();
     }
     
     public static bool LooksSimple(this Type type)

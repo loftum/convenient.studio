@@ -1,8 +1,11 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Convenient.Studio.Nodes;
 using Convenient.Studio.Scripting.Cancellation;
 
 namespace Convenient.Studio.ViewModels;
@@ -34,16 +37,7 @@ public class JsonMethodInfoConverter : JsonConverter<MethodInfo>
 
     public override void Write(Utf8JsonWriter writer, MethodInfo value, JsonSerializerOptions options)
     {
-        var builder = new StringBuilder($"{value.ReturnType.GetFriendlyName()} ");
-        if (value.DeclaringType != null)
-        {
-            builder.Append($"{value.DeclaringType.GetFriendlyName()}.");
-        }
-
-        builder.Append($"{value.Name}(")
-            .Append(string.Join(", ", value.GetParameters().Select(p => $"{p.ParameterType.GetFriendlyName()} {p.Name}")))
-            .Append(")");
-        writer.WriteStringValue(builder.ToString());
+        writer.WriteStringValue(value.ToFriendlyString());
     }
 }
 
@@ -75,8 +69,8 @@ public static class CsharpResultExtensions
                 return e.ToString();
             case Type t:
                 return t.Name;
-            // case Expression e:
-            //     return e.ToString();
+            case Expression e:
+                return JsonSerializer.Serialize(ObjectNode.For(e), Pretty);
         }
 
         return item.GetType().LooksSimple()
