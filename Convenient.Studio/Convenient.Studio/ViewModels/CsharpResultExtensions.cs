@@ -1,9 +1,51 @@
+using System.Reflection;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Convenient.Studio.Scripting.Cancellation;
-using Convenient.Studio.Scripting.Commandline;
 
 namespace Convenient.Studio.ViewModels;
+
+public class JsonTypeConverter : JsonConverter<Type>
+{
+    public override Type Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return null;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Type value, JsonSerializerOptions options)
+    {
+        if (value == null)
+        {
+            writer.WriteNullValue();
+            return;
+        }
+        writer.WriteStringValue(value.GetFriendlyName());
+    }
+}
+
+public class JsonMethodInfoConverter : JsonConverter<MethodInfo>
+{
+    public override MethodInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return null;
+    }
+
+    public override void Write(Utf8JsonWriter writer, MethodInfo value, JsonSerializerOptions options)
+    {
+        var builder = new StringBuilder($"{value.ReturnType.GetFriendlyName()} ");
+        if (value.DeclaringType != null)
+        {
+            builder.Append($"{value.DeclaringType.GetFriendlyName()}.");
+        }
+
+        builder.Append($"{value.Name}(")
+            .Append(string.Join(", ", value.GetParameters().Select(p => $"{p.ParameterType.GetFriendlyName()} {p.Name}")))
+            .Append(")");
+        writer.WriteStringValue(builder.ToString());
+    }
+}
 
 public static class CsharpResultExtensions
 {
@@ -11,9 +53,14 @@ public static class CsharpResultExtensions
     {
         Converters =
         {
-            new JsonStringEnumConverter()
+            new JsonStringEnumConverter(),
+            new JsonTypeConverter(),
+            new JsonMethodInfoConverter()
         },
-        WriteIndented = true
+        
+        WriteIndented = true,
+        IncludeFields = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
     
     public static string ToResultString(this object item)
@@ -22,31 +69,19 @@ public static class CsharpResultExtensions
         {
             case null:
                 return "null";
-            case CancelExecutionException cex:
+            case CancelExecutionException:
                 return "cancelled";
             case Exception e:
                 return e.ToString();
+            case Type t:
+                return t.Name;
+            // case Expression e:
+            //     return e.ToString();
         }
 
         return item.GetType().LooksSimple()
             ? item.ToString()
             : JsonSerializer.Serialize(item, Pretty);
     }
-
-    private static bool LooksSimple(this Type type)
-    {
-        return type.In(typeof(byte),
-                   typeof(short),
-                   typeof(int),
-                   typeof(long),
-                   typeof(float),
-                   typeof(double),
-                   typeof(decimal),
-                   typeof(bool),
-                   typeof(Guid),
-                   typeof(DateTime),
-                   typeof(DateTimeOffset),
-                   typeof(string)) ||
-               type.IsValueType && !type.GetProperties().Any() && !type.GetFields().Any();
-    }
 }
+

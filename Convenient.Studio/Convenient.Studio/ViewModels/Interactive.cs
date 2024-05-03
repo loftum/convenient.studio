@@ -21,6 +21,7 @@ public class Interactive
             .WithImports("System",
                 "System.Reflection",
                 "System.Linq",
+                "System.Linq.Expressions",
                 "System.Collections.Generic",
                 "System.Security.Cryptography",
                 "System.Text.RegularExpressions",
