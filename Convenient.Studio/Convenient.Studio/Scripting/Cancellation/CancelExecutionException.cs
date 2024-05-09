@@ -1,7 +1,6 @@
-﻿namespace Convenient.Studio.Scripting.Cancellation
+﻿namespace Convenient.Studio.Scripting.Cancellation;
+
+public class CancelExecutionException:Exception
 {
-    public class CancelExecutionException:Exception
-    {
         
-    }
 }

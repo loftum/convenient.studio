@@ -7,7 +7,7 @@ namespace Convenient.Studio.Controls;
 
 public class CurrentStatementRenderer : IBackgroundRenderer
 {
-    public Pen BorderPen { get; set; } = new Pen(Brushes.DarkGray, 1);
+    public Pen BorderPen { get; set; } = null;// new Pen(Brushes.DarkGray, 1);
     public ISolidColorBrush BackgroundBrush { get; set; } = new SolidColorBrush(Colors.DarkGray, .2);
 
     public KnownLayer Layer => KnownLayer.Caret;

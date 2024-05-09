@@ -8,11 +8,17 @@ public static class TextEditorExtensions
     public static TextSpan GetCompletionSpan(this TextEditor editor)
     {
         var caret = editor.TextArea.Caret;
-        if (caret.Offset <= 0)
+        return editor.GetCompletionSpanAt(caret.Offset);
+    }
+
+    public static TextSpan GetCompletionSpanAt(this TextEditor editor, int offset)
+    {
+        var caret = editor.TextArea.Caret;
+        if (offset <= 0)
         {
             return new TextSpan();
         }
-        var startCandidate = caret.Offset <= 0 ? 0 : caret.Offset - 1;
+        var startCandidate = offset - 1;
         var start = startCandidate;
         var lineFeeds = 0;
         while (startCandidate >= 0)
@@ -38,7 +44,7 @@ public static class TextEditorExtensions
         }
         return TextSpan.FromBounds(start, caret.Offset);
     }
-
+    
     public static string GetCompletionStatement(this TextEditor editor)
     {
         var span = editor.GetCompletionSpan();

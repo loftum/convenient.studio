@@ -16,8 +16,8 @@ public static class SyntaxHighlighting
         CSharp = DoLoad("CSharp.xshd");
         CSharpDark = DoLoad("CSharp-Dark.xshd");
             
-        manager.RegisterHighlighting("C#-2", new[] { ".cs" }, CSharp);
-        manager.RegisterHighlighting("C#-Dark", new[] { ".cs" }, CSharpDark);
+        manager.RegisterHighlighting("C#-2", [".cs"], CSharp);
+        manager.RegisterHighlighting("C#-Dark", [".cs"], CSharpDark);
         //manager.RegisterHighlighting("Json-2", new[]{".json"}, Json);
     }
 

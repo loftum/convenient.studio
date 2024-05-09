@@ -92,7 +92,7 @@ public partial class MainWindow : Window
 
     private void VmPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (!(sender is EditorViewModel editor))
+        if (sender is not EditorViewModel editor)
         {
             return;
         }

@@ -1,8 +1,7 @@
-﻿namespace Convenient.Studio.Scripting.Cancellation
+﻿namespace Convenient.Studio.Scripting.Cancellation;
+
+public enum CancellationInjection
 {
-    public enum CancellationInjection
-    {
-        ByComment,
-        EveryStatement
-    }
+    ByComment,
+    EveryStatement
 }

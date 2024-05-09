@@ -56,14 +56,33 @@ namespace Convenient.Studio.Config
         public static void PrepareForCSharp(this TextEditor editor, ICompletionProvider completionProvider)
         {
             editor.TextArea.IndentationStrategy = new CSharpIndentationStrategy(editor.Options);
-            //editor.TextArea.TextView.BackgroundRenderers.Add(new CurrentStatementRenderer(editor));
+            editor.TextArea.TextView.BackgroundRenderers.Add(new CurrentStatementRenderer(editor));
             editor.KeyDown += KeyDown(editor, completionProvider);
+            //editor.PointerHoverStopped += PointerHoverStopped(editor, completionProvider);
             editor.TextArea.TextView.LineTransformers.Add(new SemanticColorizer(editor, completionProvider));
+        }
+
+        private static EventHandler<PointerEventArgs> PointerHoverStopped(TextEditor editor, ICompletionProvider completionProvider)
+        {
+            return ShowInfo;
+            async void ShowInfo(object _, PointerEventArgs e)
+            {
+                var position = editor.GetPositionFromPoint(e.GetPosition(editor));
+                if (position == null)
+                {
+                    return;
+                }
+                var offset = editor.TextArea.Document.GetOffset(position.Value.Location);
+                var span = editor.GetCompletionSpanAt(offset);
+                Console.WriteLine(span);
+            }
         }
 
         private static EventHandler<KeyEventArgs> KeyDown(TextEditor editor, ICompletionProvider completionProvider)
         {
-            return async (o, e) =>
+            return Down;
+
+            async void Down(object _, KeyEventArgs e)
             {
                 switch (e.Key)
                 {
@@ -75,18 +94,16 @@ namespace Convenient.Studio.Config
                         {
                             return;
                         }
-                        var completionWindow = new CompletionWindow(editor.TextArea)
-                        {
-                            Width = editor.TextArea.Width <= 300 ? 300 : editor.TextArea.Width * .5,
-                        };
+
+                        var completionWindow = new CompletionWindow(editor.TextArea) {Width = editor.TextArea.Width <= 300 ? 300 : editor.TextArea.Width * .5,};
                         completionWindow.CompletionList.CompletionData.AddRange(completions.Select(c => new CompletionData(c.Prefix, c.Completion, c.Description)));
                         completionWindow.Show();
-                        completionWindow.Closed += (o, ea) => completionWindow = null;
+                        completionWindow.Closed += (_, _) => completionWindow = null;
                         e.Handled = true;
                         break;
                     }
                 }
-            };
+            }
         }
     }
 }

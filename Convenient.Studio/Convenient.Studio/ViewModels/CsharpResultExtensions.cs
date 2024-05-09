@@ -1,9 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Convenient.Studio.Nodes;
 using Convenient.Studio.Scripting.Cancellation;
@@ -30,11 +28,6 @@ public class JsonTypeConverter : JsonConverter<Type>
 
 public class JsonMethodInfoConverter : JsonConverter<MethodInfo>
 {
-    // public override bool CanConvert(Type typeToConvert)
-    // {
-    //     return typeof(MethodInfo).IsAssignableTo(typeToConvert);
-    // }
-
     public override MethodInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return null;

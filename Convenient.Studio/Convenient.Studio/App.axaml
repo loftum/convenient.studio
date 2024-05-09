@@ -4,9 +4,8 @@
              xmlns:c="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
              xmlns:editing="https://github.com/avaloniaui/avaloniaedit"
              xmlns:studio="clr-namespace:Convenient.Studio"
-
-
-             x:Class="Convenient.Studio.App">
+             x:Class="Convenient.Studio.App"
+             Name="Convenient Studio">
     <Application.DataTemplates>
         <studio:ViewLocator/>
     </Application.DataTemplates>

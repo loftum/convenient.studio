@@ -88,6 +88,7 @@
                                            FontSize="{Binding FontSize}"
                                            ShowLineNumbers="True"
                                            IsReadOnly="True"
+                                           SyntaxHighlighting="Json"
                                            HorizontalScrollBarVisibility="Auto"
                                            VerticalScrollBarVisibility="Auto"
                                            />
