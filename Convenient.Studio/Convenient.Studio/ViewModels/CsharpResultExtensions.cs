@@ -30,12 +30,43 @@ public class JsonTypeConverter : JsonConverter<Type>
 
 public class JsonMethodInfoConverter : JsonConverter<MethodInfo>
 {
+    // public override bool CanConvert(Type typeToConvert)
+    // {
+    //     return typeof(MethodInfo).IsAssignableTo(typeToConvert);
+    // }
+
     public override MethodInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return null;
     }
 
     public override void Write(Utf8JsonWriter writer, MethodInfo value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToFriendlyString());
+    }
+}
+
+public class JsonParameterInfoConverter : JsonConverter<ParameterInfo>
+{
+    public override ParameterInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return null;
+    }
+
+    public override void Write(Utf8JsonWriter writer, ParameterInfo value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToFriendlyString());
+    }
+}
+
+public class JsonMemberInfoConverter : JsonConverter<MemberInfo>
+{
+    public override MemberInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return null;
+    }
+
+    public override void Write(Utf8JsonWriter writer, MemberInfo value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value.ToFriendlyString());
     }
@@ -49,7 +80,9 @@ public static class CsharpResultExtensions
         {
             new JsonStringEnumConverter(),
             new JsonTypeConverter(),
-            new JsonMethodInfoConverter()
+            new JsonMethodInfoConverter(),
+            new JsonParameterInfoConverter(),
+            new JsonMemberInfoConverter()
         },
         
         WriteIndented = true,

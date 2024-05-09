@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Convenient.Studio.Scripting.Commandline;
@@ -70,6 +71,21 @@ public static class TypeExtensions
         return builder.ToString();
     }
     
+    public static string ToFriendlyString(this ParameterInfo parameter)
+    {
+        return $"{parameter.ParameterType.GetFriendlyName()} {parameter.Name}";
+    }
+    
+    public static string ToFriendlyString(this MemberInfo member)
+    {
+        return member switch
+        {
+            PropertyInfo property => property.ToFriendlyString(),
+            FieldInfo field => field.ToFriendlyString(),
+            _ => $"{member.MemberType} {member.Name}"
+        };
+    }
+    
     public static bool LooksSimple(this Type type)
     {
         return type.In(typeof(byte),
@@ -86,5 +102,27 @@ public static class TypeExtensions
                    typeof(string)) ||
                type.IsValueType && !type.GetProperties().Any() && !type.GetFields().Any();
     }
+
+
+    public static bool IsPredicateOf(this Type type, Type elementType)
+    {
+        var method = typeof(TypeExtensions).GetMethod("IsPredicate", BindingFlags.Public | BindingFlags.Static, [typeof(Type)]);
+        return (bool) method.MakeGenericMethod(elementType).Invoke(null, [type]);
+    }
     
+    public static bool IsPredicate<T>(this Type type)
+    {
+        return type == typeof(Func<T, bool>);
+    }
+    
+    public static bool IsExpressionPredicateOf(this Type type, Type elementType)
+    {
+        var method = typeof(TypeExtensions).GetMethod("IsExpressionPredicate", BindingFlags.Public | BindingFlags.Static, [typeof(Type)]);
+        return (bool) method.MakeGenericMethod(elementType).Invoke(null, [type]);
+    }
+    
+    public static bool IsExpressionPredicate<T>(this Type type)
+    {
+        return type == typeof(Expression<Func<T, bool>>);
+    }
 }
