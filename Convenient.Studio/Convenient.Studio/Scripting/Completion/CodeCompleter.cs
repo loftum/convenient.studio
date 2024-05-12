@@ -5,7 +5,7 @@ namespace Convenient.Studio.Scripting.Completion;
 
 public class CodeCompleter
 {
-    private readonly IEnumerable<ISymbol> _symbols;
+    public IEnumerable<ISymbol> Symbols { get; }
     private readonly string _prefix;
     private readonly int _location;
     private readonly SemanticModel _semanticModel;
@@ -15,14 +15,14 @@ public class CodeCompleter
         var semantics = compilation.GetSemanticModel(tree);
         var nodes = GetCompletionSyntax(tree.GetRoot().GetMostSpecificNodeOrTokenAt(location > 0 ? location - 1 : 0));
         _prefix = nodes.Prefix?.GetText().ToString() ?? "";
-        _symbols = semantics.GetCompletionSymbols(location, nodes);
+        Symbols = semantics.GetCompletionSymbols(location, nodes);
         _location = location;
         _semanticModel = semantics;
     }
 
     public IEnumerable<CompletionThing> GetCompletions()
     {
-        return _symbols
+        return Symbols
             .Where(s => s.Name.StartsWith(_prefix, StringComparison.InvariantCultureIgnoreCase))
             .Select(GetCompletionThing);
     }

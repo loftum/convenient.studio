@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Convenient.Studio.Config;
 using Convenient.Studio.ViewModels;
 using Convenient.Studio.Views;
 using ReactiveUI;
@@ -12,9 +12,7 @@ public static class KeyBinder
 {
     public static void AddKeyBindingsAndMenu(MainWindowViewModel vm, MainWindow window)
     {
-        var isMac = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        
-        var ctrl = isMac ? KeyModifiers.Meta : KeyModifiers.Control;
+        var ctrl = Modifiers.CtrlOrMeta;
 
         var newFile = Bind(vm.Editor.NewFile, Key.N, ctrl);
         var save = Bind(vm.Editor.Save, Key.S, ctrl);
@@ -25,7 +23,7 @@ public static class KeyBinder
         var goToPreviousTab = Bind(ReactiveCommand.Create(window.GoToPreviousTab), Key.Left, ctrl | KeyModifiers.Alt);
         var goToNextTab = Bind(ReactiveCommand.Create(window.GoToNextTab), Key.Right, ctrl | KeyModifiers.Alt);
             
-        if (isMac)
+        if (Platform.IsMac)
         {
             var menu = new NativeMenu
             {

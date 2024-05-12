@@ -1,29 +1,39 @@
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Avalonia.Input;
 using AvaloniaEdit;
 
-namespace Convenient.Studio.Config
+namespace Convenient.Studio.Config;
+
+public static class KeyBindings
 {
-    public static class KeyBindings
-    {
-        public static readonly KeyBinding[] ForMac = 
-        {
-            Bind(EditingCommands.MoveToLineStart, "cmd+left"),
-            Bind(EditingCommands.MoveToLineEnd, "cmd+right"),
-            Bind(EditingCommands.MoveToDocumentStart, "cmd+up"),
-            Bind(EditingCommands.MoveToDocumentEnd, "cmd+down"),
-            Bind(EditingCommands.MoveLeftByWord, "alt+left"),
-            Bind(EditingCommands.MoveRightByWord, "alt+right"),
-            Bind(EditingCommands.SelectLeftByWord, "shift+alt+left"),
-            Bind(EditingCommands.SelectRightByWord, "shift+alt+right"),
-            Bind(EditingCommands.SelectToLineStart, "shift+cmd+left"),
-            Bind(EditingCommands.SelectToLineEnd, "shift+cmd+right"),
-        };
+    public static readonly KeyBinding[] ForMac =
+    [
+        Bind(EditingCommands.MoveToLineStart, "cmd+left"),
+        Bind(EditingCommands.MoveToLineEnd, "cmd+right"),
+        Bind(EditingCommands.MoveToDocumentStart, "cmd+up"),
+        Bind(EditingCommands.MoveToDocumentEnd, "cmd+down"),
+        Bind(EditingCommands.MoveLeftByWord, "alt+left"),
+        Bind(EditingCommands.MoveRightByWord, "alt+right"),
+        Bind(EditingCommands.SelectLeftByWord, "shift+alt+left"),
+        Bind(EditingCommands.SelectRightByWord, "shift+alt+right"),
+        Bind(EditingCommands.SelectToLineStart, "shift+cmd+left"),
+        Bind(EditingCommands.SelectToLineEnd, "shift+cmd+right")
+    ];
             
-        private static KeyBinding Bind(ICommand command, string gesture) => new()
-        {
-            Command = command,
-            Gesture = KeyGesture.Parse(gesture)
-        };
-    }
+    private static KeyBinding Bind(ICommand command, string gesture) => new()
+    {
+        Command = command,
+        Gesture = KeyGesture.Parse(gesture)
+    };
+}
+
+public static class Modifiers
+{
+    public static KeyModifiers CtrlOrMeta { get; } = Platform.IsMac ? KeyModifiers.Meta : KeyModifiers.Control;
+}
+
+public static class Platform
+{
+    public static bool IsMac { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 }

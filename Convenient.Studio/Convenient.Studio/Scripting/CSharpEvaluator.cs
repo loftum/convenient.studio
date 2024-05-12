@@ -87,38 +87,39 @@ public class CSharpEvaluator : ICompletionProvider
 
     private string InjectCancellationDetectionCode(string code, CancellationInjection? cancellationInjection)
     {
-        if (cancellationInjection == CancellationInjection.EveryStatement)
+        switch (cancellationInjection)
         {
-            var lines = code.Split(Environment.NewLine).Select(x => x.TrimEnd());
-            var ret = new List<string>();
-            foreach (var line in lines)
+            case CancellationInjection.EveryStatement:
             {
-                ret.Add(line);
-                if (line.EndsWith(";"))
+                var lines = code.Split(Environment.NewLine).Select(x => x.TrimEnd());
+                var ret = new List<string>();
+                foreach (var line in lines)
                 {
-                    ret.Add(CancellationDetectionSnippet);
+                    ret.Add(line);
+                    if (line.EndsWith(";"))
+                    {
+                        ret.Add(CancellationDetectionSnippet);
+                    }
                 }
-            }
 
-            return string.Join(Environment.NewLine, ret);
-        }
-        else if (cancellationInjection == CancellationInjection.ByComment)
-        {
-            var lines = code.Split(Environment.NewLine).Select(x => x.TrimEnd());
-            var ret = new List<string>();
-            foreach (var line in lines)
-            {
-                ret.Add(line);
-                if (line.EndsWith("////"))
-                {
-                    ret.Add(CancellationDetectionSnippet);
-                }
+                return string.Join(Environment.NewLine, ret);
             }
-            return string.Join(Environment.NewLine, ret);
-        }
-        else
-        {
-            return code;
+            case CancellationInjection.ByComment:
+            {
+                var lines = code.Split(Environment.NewLine).Select(x => x.TrimEnd());
+                var ret = new List<string>();
+                foreach (var line in lines)
+                {
+                    ret.Add(line);
+                    if (line.EndsWith("////"))
+                    {
+                        ret.Add(CancellationDetectionSnippet);
+                    }
+                }
+                return string.Join(Environment.NewLine, ret);
+            }
+            default:
+                return code;
         }
     }
 
