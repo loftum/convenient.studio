@@ -21,7 +21,7 @@ public class CurrentStatementRenderer : IBackgroundRenderer
 
     public void Draw(TextView textView, DrawingContext drawingContext)
     {
-        var span = _editor.GetCompletionSpan();
+        var span = _editor.GetCodeSpan();
         if (span.IsEmpty)
         {
             return;
