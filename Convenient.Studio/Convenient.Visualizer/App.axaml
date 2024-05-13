@@ -1,0 +1,64 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cc="clr-namespace:AvaloniaEdit.CodeCompletion;assembly=AvaloniaEdit"
+             xmlns:c="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
+             xmlns:editing="https://github.com/avaloniaui/avaloniaedit"
+             xmlns:views="clr-namespace:Convenient.Visualizer.Views"
+             x:Class="Convenient.Visualizer.App"
+             Name="Convenient Studio">
+    <Application.DataTemplates>
+        <views:ViewLocator/>
+    </Application.DataTemplates>
+    
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Themes.Fluent/FluentTheme.xaml"/>
+        <StyleInclude Source="avares://Avalonia.Themes.Simple/SimpleTheme.xaml"/>
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        
+        <Style Selector="ContentControl.ToolTip">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="#1b1b1b" />
+            <Setter Property="BorderBrush" Value="Gray" />
+        </Style>
+        <Style Selector="c|ScrollBar">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        
+        <Style Selector="cc|CompletionList">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <cc:CompletionListBox Name="PART_ListBox"  BorderThickness="0" >
+                        <cc:CompletionListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Height="18">
+                                    <Image Source="{Binding Image}"
+                                           Width="15"
+                                           Height="15"                          />
+                                    <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Text="{Binding Content}" FontSize="12" FontFamily="Consolas" >
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </cc:CompletionListBox.ItemTemplate>
+                    </cc:CompletionListBox>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="TabStripItem:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ThemeControlHighlightHighBrush}" />
+        </Style>
+        <Style Selector="TabStripItem:selected">
+            <Setter Property="Background" Value="{DynamicResource ThemeControlHighlightHighBrush}" />
+        </Style>
+        <Style Selector="TabStripItem">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        </Style>
+        <Style Selector="editing|TextArea">
+            <Setter Property="SelectionBrush" Value="#88214283"></Setter>
+        </Style>
+    </Application.Styles>
+    
+    
+</Application>

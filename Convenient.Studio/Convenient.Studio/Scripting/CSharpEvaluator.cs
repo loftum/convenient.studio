@@ -9,8 +9,8 @@ namespace Convenient.Studio.Scripting;
 public interface ICompletionProvider
 {
     ScriptState ScriptState { get; }
-    Task<List<CompletionThing>> GetCompletions(string code, int location);
-    CodeCompleter GetCodeCompleter(string code, int location);
+    Task<List<CompletionThing>> GetCompletionsAsync(string code, int location);
+    CodeAnalyzer GetCodeCompleter(string code);
 }
     
 public class CSharpEvaluator : ICompletionProvider
@@ -20,7 +20,7 @@ public class CSharpEvaluator : ICompletionProvider
             .Select(Assembly.LoadFile)
             .ToArray();
 
-    public static ScriptOptions DefaultOptions => ScriptOptions.Default
+    private static ScriptOptions DefaultOptions => ScriptOptions.Default
         .WithReferences(Assemblies)
             
         .WithImports("System",
@@ -85,7 +85,7 @@ public class CSharpEvaluator : ICompletionProvider
         }
     }
 
-    private string InjectCancellationDetectionCode(string code, CancellationInjection? cancellationInjection)
+    private static string InjectCancellationDetectionCode(string code, CancellationInjection? cancellationInjection)
     {
         switch (cancellationInjection)
         {
@@ -125,20 +125,20 @@ public class CSharpEvaluator : ICompletionProvider
 
     private const string CancellationDetectionSnippet = "if(CancellationToken.IsCancellationRequested){throw new Studio.Scripting.Cancellation.CancelExecutionException();}";
 
-    public Task<List<CompletionThing>> GetCompletions(string code, int location)
+    public Task<List<CompletionThing>> GetCompletionsAsync(string code, int location)
     {
-        var completer = GetCodeCompleter(code, location);
-        var completions = completer.GetCompletions();
+        var completer = GetCodeCompleter(code);
+        var completions = completer.GetCompletionsAt(location);
         return Task.FromResult(completions.ToList());
     }
 
-    public CodeCompleter GetCodeCompleter(string code, int location)
+    public CodeAnalyzer GetCodeCompleter(string code)
     {
         var script = ScriptState.Script.ContinueWith(code);
         script.Compile();
         var compilation = script.GetCompilation();
         var tree = compilation.SyntaxTrees.Single();
-        var completer = new CodeCompleter(tree, compilation, location);
+        var completer = new CodeAnalyzer(tree, compilation);
         return completer;
     }
 }

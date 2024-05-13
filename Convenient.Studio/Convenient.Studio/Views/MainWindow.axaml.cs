@@ -25,7 +25,7 @@ public partial class MainWindow : Window
     private readonly TextEditor _outputBox;
     private readonly TextEditor _consoleBox;
     private readonly TabStrip _fileTabs;
-    private readonly FileManager _fileManager = new();
+    private readonly FileManager _fileManager = new("studio");
         
     static MainWindow()
     {
@@ -120,7 +120,7 @@ public partial class MainWindow : Window
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Has(Key.S, KeyModifiers.Control) || e.Has(Key.S, KeyModifiers.Meta))
+        if (e.Key == Key.S && (e.KeyModifiers & Modifiers.CtrlOrMeta) == Modifiers.CtrlOrMeta)
         {
             Save();
             e.Handled = true;

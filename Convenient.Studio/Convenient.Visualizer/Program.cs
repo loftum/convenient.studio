@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.ReactiveUI;
 
-namespace Convenient.Studio;
+namespace Convenient.Visualizer;
 
 class Program
 {
@@ -17,7 +17,7 @@ class Program
             return 1;
         }
     }
-
+    
     private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()

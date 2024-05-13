@@ -114,7 +114,7 @@ public class CommandReader
                     Console.CursorLeft = Prompt.Length + _history.Current.Length;
                     break;
                 case ConsoleKey.Tab:
-                    var completions = await _evaluator.GetCompletions(_history.Current.ToString(), Index);
+                    var completions = await _evaluator.GetCompletionsAsync(_history.Current.ToString(), Index);
                     if (lastKey == ConsoleKey.Tab && autocomplete)
                     {
                         lastKey = null;

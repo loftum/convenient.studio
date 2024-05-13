@@ -6,7 +6,7 @@ namespace Convenient.Studio.Scripting;
 public class ConsoleApp
 {
     public event EventHandler OnSave;
-    private readonly FileManager _fileManager = new FileManager();
+    private readonly FileManager _fileManager = new FileManager("console");
     private readonly CommandReader _commandReader;
     private readonly CSharpEvaluator _evaluator;
     private readonly InputHistory _history;
@@ -31,25 +31,23 @@ public class ConsoleApp
 
     public async Task Run()
     {
-        using (var source = new CancellationTokenSource())
+        using var source = new CancellationTokenSource();
+        Console.CancelKeyPress += (s, e) =>
         {
-            Console.CancelKeyPress += (s, e) =>
-            {
-                e.Cancel = true;
-                Save();
-                Console.WriteLine("Bye!");
-                Environment.Exit(0);
-            };
-            try
-            {
-                await Run(source.Token);
-            }
-            catch (Exception e)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e);
-                Console.ResetColor();
-            }
+            e.Cancel = true;
+            Save();
+            Console.WriteLine("Bye!");
+            Environment.Exit(0);
+        };
+        try
+        {
+            await Run(source.Token);
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(e);
+            Console.ResetColor();
         }
     }
 

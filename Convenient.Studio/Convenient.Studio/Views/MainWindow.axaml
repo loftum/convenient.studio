@@ -27,14 +27,8 @@
                       HorizontalAlignment="Right"
                       MinWidth="100" />
         </Grid>
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="5" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            
+        <Grid Grid.Row="1" RowDefinitions="Auto,*,5,*">
+
             <StackPanel Orientation="Horizontal" Grid.Row="0">
                 <TabStrip Name="FileTabs" Background="Green" ItemsSource="{Binding Editor.Files}" SelectedItem="{Binding Editor.CurrentFile}" SelectionChanged="FileChanged">
                     <TabStrip.ItemTemplate>

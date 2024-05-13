@@ -2,25 +2,23 @@
 
 namespace Convenient.Studio.Scripting.Commandline;
 
-internal class FileManager
+public class FileManager
 {
-    private const string Folder = "Files";
-    public static readonly string AppliactionFilesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Folder);
-
     private readonly string _basePath;
 
 
-    public FileManager(string basePath)
+    public FileManager(string name)
     {
-        _basePath = basePath;
-        if (!Directory.Exists(basePath))
+        _basePath = GetPath(name);
+        if (!Directory.Exists(_basePath))
         {
-            Directory.CreateDirectory(basePath);
+            Directory.CreateDirectory(_basePath);
         }
     }
-
-    public FileManager() : this(AppliactionFilesPath)
+    
+    private static string GetPath(string name)
     {
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".convenient", name);
     }
 
     public void SaveJson(object item, string filename = null)

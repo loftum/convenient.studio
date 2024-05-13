@@ -5,7 +5,7 @@ namespace Convenient.Studio.Scripting.Commandline;
 public class CSharpRepl
 {
     public event EventHandler OnSave;
-    private readonly FileManager _fileManager = new FileManager();
+    private readonly FileManager _fileManager = new FileManager("repl");
     private readonly CSharpEvaluator _evaluator;
     private readonly InputHistory _history;
 

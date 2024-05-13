@@ -75,8 +75,7 @@ public static class TextEditorSetupExtensions
             var offset = editor.TextArea.Document.GetOffset(position.Value.Location);
             var span = editor.GetCodeSpanAt(offset);
 
-            var completer = completionProvider.GetCodeCompleter(editor.Text.Substring(span.Start, span.End), span.Offset);
-            Console.WriteLine(string.Join('\n', completer.Symbols));
+            var completer = completionProvider.GetCodeCompleter(editor.Text.Substring(span.Start, span.End));
         }
     }
 
@@ -91,7 +90,7 @@ public static class TextEditorSetupExtensions
                 case Key.Space when (e.KeyModifiers & KeyModifiers.Control) == KeyModifiers.Control:
                 {
                     var currentStatement = editor.GetCompletionStatement();
-                    var completions = await completionProvider.GetCompletions(currentStatement, currentStatement.Length);
+                    var completions = await completionProvider.GetCompletionsAsync(currentStatement, currentStatement.Length);
                     if (!completions.Any())
                     {
                         return;
@@ -106,17 +105,18 @@ public static class TextEditorSetupExtensions
                 }
                 case Key.P when (e.KeyModifiers & Modifiers.CtrlOrMeta) == Modifiers.CtrlOrMeta:
                 {
-                    var currentStatement = editor.GetCompletionStatement();
-                    var completions = await completionProvider.GetCompletions(currentStatement, currentStatement.Length);
-                    if (!completions.Any())
+                    Console.WriteLine("ctrl+P!");
+                    var insightWindow = new InsightWindow(editor.TextArea)
                     {
-                        return;
-                    }
+                        
+                        Width = editor.TextArea.Width <= 300 ? 300 : editor.TextArea.Width * .5,
+                        Height = 200
+                    };
+                    
 
-                    var completionWindow = new CompletionWindow(editor.TextArea) {Width = editor.TextArea.Width <= 300 ? 300 : editor.TextArea.Width * .5,};
-                    completionWindow.CompletionList.CompletionData.AddRange(completions.Select(c => new CompletionData(c.Prefix, c.Completion, c.Description)));
-                    completionWindow.Show();
-                    completionWindow.Closed += (_, _) => completionWindow = null;
+                    
+                    insightWindow.Show();
+                    insightWindow.Closed += (_, _) => insightWindow = null;
                     e.Handled = true;
                     break;
                 }

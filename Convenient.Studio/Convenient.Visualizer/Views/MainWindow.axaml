@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels1="clr-namespace:Convenient.Visualizer.ViewModels"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Convenient.Visualizer.Views.MainWindow"
+        Icon="/Assets/visualizer.png"
+        Title="Visualizer">
+
+    <Design.DataContext>
+        <viewModels1:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,5,*">
+
+        <Grid Grid.Column="0">
+            <avaloniaEdit:TextEditor
+                x:Name="InputBox"
+                BorderThickness="2"
+                FontFamily="Monaco"
+                FontSize="{Binding FontSize}"
+                SyntaxHighlighting="C#-Dark"
+                ShowLineNumbers="true"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto"
+                IsEnabled="true"
+                TextChanged="InputTextChanged"
+                />
+        </Grid>
+        
+        <GridSplitter Grid.Column="1"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Center"
+                      Width="5" />
+        
+        <Grid Grid.Column="2">
+            <avaloniaEdit:TextEditor
+                x:Name="SyntaxTreeBox"
+                BorderThickness="2"
+                FontFamily="Monaco"
+                FontSize="{Binding FontSize}"
+                SyntaxHighlighting="C#-Dark"
+                ShowLineNumbers="true"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto"
+                IsEnabled="true"
+                IsReadOnly="true"
+            />
+        </Grid>
+    </Grid>
+
+</Window>

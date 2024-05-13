@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="11.0.10" />
+      <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.6" />
+      <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
+      <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
+      <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+      <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.10" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="App.axaml.cs">
+        <DependentUpon>App.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\visualizer.png" />
+      <AvaloniaResource Include="Assets\visualizer.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Convenient.Studio\Convenient.Studio.csproj" />
+    </ItemGroup>
+
+</Project>
